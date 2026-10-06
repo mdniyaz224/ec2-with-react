@@ -22,14 +22,13 @@ jobs:
       - name: Deploy
         env:
           EC2_HOST: ${{ vars.EC2_HOST }}
-          # EC2_USER: ${{ vars.EC2_USER }}
-          # EC2_PATH: ${{ vars.EC2_DEPLOY_PATH }}
           EC2_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
           set -e
-          test -n "$EC2_HOST" && test -n "$EC2_USER" && test -n "$EC2_PATH" && test -n "$EC2_KEY"
+          test -n "$EC2_HOST" && test -n "$EC2_KEY"
           mkdir -p ~/.ssh
           printf '%s\n' "$EC2_KEY" > ~/.ssh/ec2_key
           chmod 600 ~/.ssh/ec2_key
           ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
-          rsync -avz --delete -e "ssh -i ~/.ssh/ec2_key" dist/ "$EC2_USER@$EC2_HOST:$EC2_PATH/"
+          ssh -i ~/.ssh/ec2_key ubuntu@"$EC2_HOST" "sudo mkdir -p /var/www/html && sudo chown ubuntu:ubuntu /var/www/html"
+          rsync -avz --delete -e "ssh -i ~/.ssh/ec2_key" dist/ "ubuntu@$EC2_HOST:/var/www/html/"
