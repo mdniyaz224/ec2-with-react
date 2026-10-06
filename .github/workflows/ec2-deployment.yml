@@ -4,6 +4,9 @@ on:
   push:
     branches: [main]
 
+permissions:
+  contents: read
+
 jobs:
   deploy:
     runs-on: ubuntu-latest
@@ -27,8 +30,10 @@ jobs:
           set -e
           test -n "$EC2_HOST" && test -n "$EC2_KEY"
           mkdir -p ~/.ssh
+          chmod 700 ~/.ssh
           printf '%s\n' "$EC2_KEY" > ~/.ssh/ec2_key
           chmod 600 ~/.ssh/ec2_key
           ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
+          chmod 600 ~/.ssh/known_hosts
           ssh -i ~/.ssh/ec2_key ubuntu@"$EC2_HOST" "sudo mkdir -p /var/www/html && sudo chown ubuntu:ubuntu /var/www/html"
           rsync -avz --delete -e "ssh -i ~/.ssh/ec2_key" dist/ "ubuntu@$EC2_HOST:/var/www/html/"
