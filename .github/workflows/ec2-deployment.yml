@@ -22,8 +22,8 @@ jobs:
       - name: Deploy
         env:
           EC2_HOST: ${{ vars.EC2_HOST }}
-          EC2_USER: ${{ vars.EC2_USER }}
-          EC2_PATH: ${{ vars.EC2_DEPLOY_PATH }}
+          # EC2_USER: ${{ vars.EC2_USER }}
+          # EC2_PATH: ${{ vars.EC2_DEPLOY_PATH }}
           EC2_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
           set -e
