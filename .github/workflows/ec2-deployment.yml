@@ -21,7 +21,7 @@ jobs:
 
       - name: Deploy
         env:
-          EC2_HOST: ${{ vars.EC2_HOST }}
+          EC2_HOST: ${{ secrets.EC2_HOST }}
           EC2_KEY: ${{ secrets.EC2_SSH_KEY }}
         run: |
           set -e
