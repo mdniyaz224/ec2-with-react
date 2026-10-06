@@ -35,5 +35,5 @@ jobs:
           chmod 600 ~/.ssh/ec2_key
           ssh-keyscan -H "$EC2_HOST" >> ~/.ssh/known_hosts
           chmod 600 ~/.ssh/known_hosts
-          ssh -i ~/.ssh/ec2_key ubuntu@"$EC2_HOST" "sudo mkdir -p /var/www/html && sudo chown ubuntu:ubuntu /var/www/html"
-          rsync -avz --delete -e "ssh -i ~/.ssh/ec2_key" dist/ "ubuntu@$EC2_HOST:/var/www/html/"
+          ssh -i ~/.ssh/ec2_key ec2-user@"$EC2_HOST" "sudo dnf install -y nginx rsync && sudo systemctl enable --now nginx && sudo chown -R ec2-user:ec2-user /usr/share/nginx/html"
+          rsync -avz --delete -e "ssh -i ~/.ssh/ec2_key" dist/ "ec2-user@$EC2_HOST:/usr/share/nginx/html/"

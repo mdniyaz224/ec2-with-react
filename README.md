@@ -17,6 +17,6 @@ If you are developing a production application, we recommend using TypeScript wi
 
 ## Deploying to EC2
 
-Pushes to `main` build the app and copy `dist/` to your EC2 web directory. Add these GitHub Actions variables: `EC2_HOST` (instance public IP/DNS), `EC2_USER` (SSH user), and `EC2_DEPLOY_PATH` (web directory, e.g. `/var/www/html`). Add `EC2_SSH_KEY` as a secret containing the complete contents of your `.pem` private key, including its `BEGIN` and `END` lines.
+Pushes to `main` build the app and copy `dist/` to the Nginx web root on an Amazon Linux 2023 EC2 instance. Add the repository secrets `EC2_HOST` (instance public IP/DNS) and `EC2_SSH_KEY` (the complete private key contents, including the `BEGIN` and `END` lines). The workflow logs in as `ec2-user`, installs/enables Nginx and rsync, and deploys to `/usr/share/nginx/html`.
 
-Install a web server and `rsync` on EC2, and ensure the SSH user can write to the deployment directory. The workflow looks up the SSH host key with `ssh-keyscan`.
+The EC2 security group must allow SSH (port 22) from GitHub Actions and HTTP (port 80) from site visitors. The public key matching `EC2_SSH_KEY` must already be authorized for `ec2-user`. The workflow looks up the SSH host key with `ssh-keyscan`.
